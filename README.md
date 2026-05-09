@@ -2,6 +2,15 @@
 
 Python FastAPI service for the three Gemini agent actions from `ai-agent.ts`.
 
+## Setting
+
+```bash
+sudo cp sloth-api.service /etc/systemd/system/sloth-api.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now sloth-api.service
+sudo systemctl status sloth-api.service
+```
+
 ## Run
 
 ```bash
