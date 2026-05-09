@@ -1,0 +1,16 @@
+[Unit]
+Description=Sloth AI Agent API
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=admin
+WorkingDirectory=/home/admin/sloth_api
+Environment="GEMINI_API_KEY="
+ExecStart=/usr/bin/python3 /home/admin/sloth_api/main.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
