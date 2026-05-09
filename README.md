@@ -38,7 +38,9 @@ All POST endpoints accept:
 }
 ```
 
+For older callers, the same JSON body can use `req` instead of `contents`.
+
 - `GET /health` returns `{"status": "ok"}`
 - `POST /suggest` returns `string[]`
-- `POST /write` returns `string[7]`
+- `POST /write` returns `string[7]`; `/writ` is kept as a compatibility alias
 - `POST /todo` returns `{ "name": string, "value": number, "todos": string[] }[]`
