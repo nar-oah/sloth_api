@@ -1,9 +1,16 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from models import HealthRes, TodoStage
 from service import get_suggest_res, get_todo_res, get_week_plan_res
 
 
 app = FastAPI(title="Sloth AI Agent API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health", response_model=HealthRes)
