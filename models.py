@@ -5,6 +5,10 @@ class HealthRes(BaseModel):
     status: str = Field(description="服务健康检查状态。")
 
 
+class AgentReq(BaseModel):
+    contents: str = Field(description="用户提供的目标或任务内容。")
+
+
 class SuggestRes(RootModel[list[str]]):
     root: list[str] = Field(
         min_length=3,
