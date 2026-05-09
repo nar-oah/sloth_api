@@ -1,13 +1,6 @@
 from pydantic import BaseModel, Field, RootModel
 
 
-class AgentReq(BaseModel):
-    contents: str = Field(
-        min_length=1,
-        description="用户提供的目标、计划或任务上下文原文。",
-    )
-
-
 class HealthRes(BaseModel):
     status: str = Field(description="服务健康检查状态。")
 

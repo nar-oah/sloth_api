@@ -1,23 +1,15 @@
-from functools import cache
 from typing import TypeVar
-
 from google import genai
 from pydantic import BaseModel
-
 from models import SuggestRes, TodoRes, WeekPlanRes
 
 
-FAST_MODEL = "gemini-2.5-flash-lite"
-THINK_MODEL = "gemini-2.5-flash-preview-05-20"
-
-SUGGEST_TASK = "基于用户提供的本月目标与前几周目标，为我推荐本周的3-5个具体、可衡量、可实现、相关的目标。"
-
+SUGGEST_TASK = "基于用户提供的本月目标与前几周目标，为我推荐本周的3-5个具体、可衡量、可实现、相关、尽可能简短的目标。"
 WEEK_PLAN_TASK = """
 请根据用户提供的目标，为我创建一份从周一到周日的详细周度任务计划。请遵循以下要求：
 目标对齐：确保从周一到周日的每日任务都紧密围绕「本周核心目标」展开，并服务于「本月目标」。
 具体可执行：为每一天仅分配一个明确、可操作的核心任务内容。
 """.strip()
-
 TODO_TASK = """
 你的任务是：
 1. 分析与整合：仔细分析我提供的任务内容和目标。
@@ -30,47 +22,32 @@ TODO_TASK = """
 ResultT = TypeVar("ResultT", bound=BaseModel)
 
 
-def get_contents(task: str, contents: str) -> str:
-    return f"{task}\n\n用户提供内容：\n{contents}"
-
-
-@cache
-def get_client() -> genai.Client:
-    return genai.Client()
-
-
-def get_gen_res(model: str, contents: str, res_type: type[ResultT]) -> ResultT:
-    response = get_client().models.generate_content(
-        model=model,
+def get_res(prompt: str, contents: str, res_type: type[ResultT]) -> ResultT:
+    client = genai.Client()
+    response = client.models.generate_content(
+        model="gemini-3.1-flash-lite-preview",
         contents=contents,
-        config={
-            "response_mime_type": "application/json",
-            "response_json_schema": res_type.model_json_schema(),
-        },
+        config=genai.types.GenerateContentConfig(
+            system_instruction=prompt,
+            response_mime_type="application/json",
+            response_json_schema=res_type.model_json_schema(),
+        ),
     )
     text = response.text if isinstance(response.text, str) else ""
     return res_type.model_validate_json(text)
 
 
 def get_suggest_res(contents: str) -> SuggestRes:
-    return get_gen_res(
-        FAST_MODEL,
-        get_contents(SUGGEST_TASK, contents),
-        SuggestRes,
-    )
+    return get_res(SUGGEST_TASK, contents, SuggestRes)
 
 
 def get_week_plan_res(contents: str) -> WeekPlanRes:
-    return get_gen_res(
-        THINK_MODEL,
-        get_contents(WEEK_PLAN_TASK, contents),
-        WeekPlanRes,
-    )
+    return get_res(WEEK_PLAN_TASK, contents, WeekPlanRes)
 
 
 def get_todo_res(contents: str) -> TodoRes:
-    return get_gen_res(
-        THINK_MODEL,
-        get_contents(TODO_TASK, contents),
-        TodoRes,
-    )
+    return get_res(TODO_TASK, contents, TodoRes)
+
+
+if __name__ == "__main__":
+    print(get_suggest_res("测试"))
