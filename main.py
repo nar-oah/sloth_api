@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models import HealthRes, TodoStage
+from models import AgentReq, HealthRes, TodoStage
 from service import get_suggest_res, get_todo_res, get_week_plan_res
 
 
@@ -19,18 +19,19 @@ def get_health() -> HealthRes:
 
 
 @app.post("/suggest", response_model=list[str])
-def get_suggest(req: str) -> list[str]:
-    return get_suggest_res(req).root
+def get_suggest(req: AgentReq) -> list[str]:
+    return get_suggest_res(req.contents).root
 
 
 @app.post("/writ", response_model=list[str])
-def get_write(req: str) -> list[str]:
-    return get_week_plan_res(req).root
+@app.post("/write", response_model=list[str])
+def get_write(req: AgentReq) -> list[str]:
+    return get_week_plan_res(req.contents).root
 
 
 @app.post("/todo", response_model=list[TodoStage])
-def get_todo(req: str) -> list[TodoStage]:
-    return get_todo_res(req).root
+def get_todo(req: AgentReq) -> list[TodoStage]:
+    return get_todo_res(req.contents).root
 
 
 if __name__ == "__main__":
