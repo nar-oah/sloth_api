@@ -24,7 +24,6 @@ def get_suggest(req: AgentReq) -> list[str]:
 
 
 @app.post("/writ", response_model=list[str])
-@app.post("/write", response_model=list[str])
 def get_write(req: AgentReq) -> list[str]:
     return get_week_plan_res(req.contents).root
 
