@@ -21,6 +21,13 @@ python3 main.py
 
 The service starts on `http://localhost:8000`.
 
+## CORS
+
+The API enables CORS for browser and mini app calls by default. Current config
+allows any origin and does not enable credentialed cookie requests. If the
+frontend needs cookies or login sessions, replace `allow_origins=["*"]` in
+`main.py` with the exact production domains.
+
 ## Endpoints
 
 All POST endpoints accept:
