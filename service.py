@@ -1,3 +1,4 @@
+from functools import cache
 from typing import TypeVar
 
 from google import genai
@@ -27,15 +28,19 @@ TODO_TASK = """
 """.strip()
 
 ResultT = TypeVar("ResultT", bound=BaseModel)
-client = genai.Client()
 
 
 def get_contents(task: str, contents: str) -> str:
     return f"{task}\n\n用户提供内容：\n{contents}"
 
 
+@cache
+def get_client() -> genai.Client:
+    return genai.Client()
+
+
 def get_gen_res(model: str, contents: str, res_type: type[ResultT]) -> ResultT:
-    response = client.models.generate_content(
+    response = get_client().models.generate_content(
         model=model,
         contents=contents,
         config={
