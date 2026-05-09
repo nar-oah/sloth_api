@@ -16,7 +16,7 @@ def get_suggest(req: str) -> list[str]:
     return get_suggest_res(req).root
 
 
-@app.post("/write", response_model=list[str])
+@app.post("/writ", response_model=list[str])
 def get_write(req: str) -> list[str]:
     return get_week_plan_res(req).root
 
