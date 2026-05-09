@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, RootModel
+from pydantic import AliasChoices, BaseModel, Field, RootModel
 
 
 class HealthRes(BaseModel):
@@ -6,7 +6,10 @@ class HealthRes(BaseModel):
 
 
 class AgentReq(BaseModel):
-    contents: str = Field(description="用户提供的目标或任务内容。")
+    contents: str = Field(
+        validation_alias=AliasChoices("contents", "req"),
+        description="用户提供的目标或任务内容。",
+    )
 
 
 class SuggestRes(RootModel[list[str]]):
