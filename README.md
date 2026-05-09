@@ -1,0 +1,28 @@
+# Sloth AI Agent API
+
+Python FastAPI service for the three Gemini agent actions from `ai-agent.ts`.
+
+## Run
+
+```bash
+python3 -m pip install -r requirements.txt
+export GEMINI_API_KEY="your-api-key"
+python3 main.py
+```
+
+The service starts on `http://localhost:8000`.
+
+## Endpoints
+
+All POST endpoints accept:
+
+```json
+{
+  "contents": "user goals or task text"
+}
+```
+
+- `GET /health` returns `{"status": "ok"}`
+- `POST /suggest` returns `string[]`
+- `POST /write` returns `string[7]`
+- `POST /todo` returns `{ "name": string, "value": number, "todos": string[] }[]`
